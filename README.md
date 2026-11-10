@@ -1,92 +1,100 @@
-# ✂ SAEP Barbearia
+# Sistema Barbearia
 
-Sistema de gestão para barbearias desenvolvido com **Node.js + Express + SQLite**.
+Sistema completo de gestão para barbearias desenvolvido com arquitetura cliente-servidor (Backend REST API com Node.js/Express e Frontend SPA com React/Vite).
 
 ## Tecnologias
 
-| Camada       | Tecnologia                                     |
-|--------------|------------------------------------------------|
-| Servidor     | Node.js 22+ · Express 4                        |
-| Banco de dados | SQLite via `node:sqlite` (built-in do Node.js) |
-| Templates    | Nunjucks (HTML server-side rendering)          |
-| Sessão       | express-session                                |
-| Criptografia | AES-256-GCM nativo (`node:crypto`)             |
-| Hash de senha| bcryptjs                                       |
+### Backend
+- **Node.js** com módulos ES (`"type": "module"`)
+- **Express 5**
+- **Prisma ORM** com PostgreSQL
+- **JWT (JSON Web Token)** para autenticação
+- **Bcryptjs** para hash seguro de senhas
+- **CORS** e **dotenv**
 
-## Funcionalidades
+### Frontend
+- **React 19**
+- **Vite**
+- **Fetch API** integrada para comunicação com o backend
 
-- 🔐 **Login com sessão** (expira em 30 minutos)
-- 👤 **Clientes** — cadastro com CPF criptografado (LGPD)
-- 💈 **Barbeiros** — cadastro com CPF e senha criptografados (LGPD)
-- ✂ **Serviços** — nome, preço e duração
-- 📅 **Agendamentos** — com verificação de conflito de horário
+---
 
-## Estrutura do projeto
+## Estrutura do Projeto
 
 ```
 sistema-barbearia/
-├── servidor/
-│   ├── app.js          # Servidor Express + rotas
-│   ├── config.js       # Configurações (env vars)
-│   ├── crypto.js       # Criptografia AES-256-GCM
-│   ├── db.js           # Conexão SQLite
-│   ├── static/
-│   │   └── style.css   # Estilos
-│   └── templates/      # Templates Nunjucks (HTML)
-│       ├── base.html
-│       ├── login.html
-│       ├── painel.html
-│       ├── clientes.html
-│       ├── barbeiros.html
-│       ├── servicos.html
-│       └── agendamentos.html
-├── scripts/
-│   └── gerar_seed.js   # Popula o banco com dados de teste
-├── docs/
-│   ├── der.mmd         # Diagrama ER (Mermaid)
-│   ├── der.png
-│   └── documentacao.md
-├── saep_db.sql         # Script SQL de criação do banco
-└── package.json
+├── backend/
+│   ├── prisma/
+│   │   ├── migrations/
+│   │   └── schema.prisma
+│   ├── src/
+│   │   ├── config/
+│   │   │   └── env.js
+│   │   ├── controllers/
+│   │   │   ├── agendamento.controller.js
+│   │   │   ├── auth.controller.js
+│   │   │   ├── cliente.controller.js
+│   │   │   ├── profissional.controller.js
+│   │   │   └── servico.controller.js
+│   │   ├── middlewares/
+│   │   │   └── auth.middleware.js
+│   │   ├── routes/
+│   │   │   ├── agendamento.routes.js
+│   │   │   ├── auth.routes.js
+│   │   │   ├── cliente.routes.js
+│   │   │   ├── profissional.routes.js
+│   │   │   ├── servico.routes.js
+│   │   │   └── index.js
+│   │   ├── lib/
+│   │   │   └── prisma.ts
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── package.json
+│   └── prisma.config.ts
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── CadastroSimples.jsx
+│   │   ├── pages/
+│   │   │   ├── Agendamentos.jsx
+│   │   │   ├── Clientes.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Profissionais.jsx
+│   │   │   └── Servicos.jsx
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
+├── .gitignore
+├── der.png
+└── README.md
 ```
 
-## Como rodar
+---
 
-### Pré-requisitos
+## Como Executar
 
-- [Node.js](https://nodejs.org/) **v22.5 ou superior**
-
-### Instalação e execução
+### 1. Backend
 
 ```bash
-# 1. Instalar dependências
+cd backend
 npm install
-
-# 2. Gerar o banco de dados com dados de teste
-node scripts/gerar_seed.js
-
-# 3. Iniciar o servidor
-npm start
+npm run dev
 ```
 
-Acesse em: **http://localhost:3000**
+O servidor iniciará em `http://localhost:3000`.
 
-### Logins de teste
+### 2. Frontend
 
-| Usuário  | Senha       |
-|----------|-------------|
-| ana      | ana123      |
-| carlos   | carlos123   |
-| juliana  | juliana123  |
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## Variáveis de ambiente
-
-| Variável      | Padrão              | Descrição                        |
-|---------------|---------------------|----------------------------------|
-| `SAEP_SECRET` | `troque-esta-chave` | Chave da sessão Express          |
-| `SAEP_CHAVE`  | (chave demo)        | Chave AES para criptografar CPFs |
-| `SAEP_DB`     | `./saep.db`         | Caminho do arquivo SQLite        |
-| `PORT`        | `3000`              | Porta do servidor                |
-
-> [!CAUTION]
-> Em produção, sempre defina `SAEP_SECRET` e `SAEP_CHAVE` com valores seguros via variáveis de ambiente.
+A aplicação estará acessível na URL indicada pelo Vite (geralmente `http://localhost:5173`).

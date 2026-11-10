@@ -1,8 +1,19 @@
 node_modules/
-saep.db
-*.db-shm
-*.db-wal
-__pycache__/
-*.pyc
-.env
+*/node_modules/
 
+.env
+.env.*
+!.env.example
+*/.env
+*/.env.*
+
+dist/
+dist-ssr/
+generated/
+backend/generated/
+*.log
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Usuario {
+  id         Int      @id @default(autoincrement())
+  nome       String  
+  email      String  
+  senha      String  
+  criado_em  DateTime @default(now())
+
+  clientes   Cliente[]
+
+  @@map("usuarios")
+}
+
+model Cliente {
+  id         Int      @id @default(autoincrement())
+  nome       String  
+  cpf        String  
+  telefone   String  
+  email      String? 
+  criado_em  DateTime @default(now())
+
+  criado_por Int
+  usuario    Usuario  @relation(fields: [criado_por], references: [id])
+
+  agendamentos Agendamento[]
+
+  @@index([nome])
+  @@map("clientes")
+}
+
+model Profissional {
+  id         Int      @id @default(autoincrement())
+  nome       String   
+  cpf        String   
+  telefone   String   
+  email      String?  
+  ativo      Boolean  @default(true)
+  criado_em  DateTime @default(now())
+
+  agendamentos Agendamento[]
+
+  @@index([nome])
+  @@map("profissionais")
+}
+
+model Servico {
+  id               Int      @id @default(autoincrement())
+  nome             String   
+  descricao        String?  
+  preco            Decimal  
+  duracao_minutos  Int
+  ativo            Boolean  @default(true)
+  criado_em        DateTime @default(now())
+
+  agendamentos Agendamento[]
+
+  @@map("servicos")
+}
+
+model Agendamento {
+  id          Int      @id @default(autoincrement())
+
+  cliente_id  Int
+  profissional_id Int
+  servico_id  Int
+
+  data_hora   DateTime
+  status      String   @default("AGENDADO") 
+  observacoes String?
+
+  criado_em   DateTime @default(now())
+  atualizado_em DateTime @updatedAt
+
+  cliente     Cliente  @relation(fields: [cliente_id], references: [id])
+  profissional    Profissional @relation(fields: [profissional_id], references: [id])
+  servico     Servico  @relation(fields: [servico_id], references: [id])
+
+  @@index([data_hora])
+  @@index([profissional_id, data_hora])
+  @@index([cliente_id])
+  @@map("agendamentos")
+}
