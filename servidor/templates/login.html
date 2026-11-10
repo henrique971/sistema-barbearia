@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block corpo %}
+<section class="cartao login">
+  <h1>Entrar</h1>
+  <form method="post" action="/login">
+    <label>Usuário
+      <input name="login" required autofocus autocomplete="username">
+    </label>
+    <label>Senha
+      <input name="senha" type="password" required autocomplete="current-password">
+    </label>
+    <button type="submit">Entrar</button>
+  </form>
+  <p class="dica">A sessão expira após 30 minutos de inatividade.</p>
+</section>
+{% endblock %}

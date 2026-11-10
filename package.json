@@ -1,0 +1,24 @@
+{
+  "name": "saep-barbearia",
+  "version": "1.0.0",
+  "description": "Sistema SAEP Barbearia — Node.js/Express (migrado de Python/Flask)",
+  "main": "servidor/app.js",
+  "scripts": {
+    "start":  "node servidor/app.js",
+    "dev":    "nodemon servidor/app.js",
+    "seed":   "node scripts/gerar_seed.js"
+  },
+  "dependencies": {
+    "bcryptjs":        "^2.4.3",
+    "body-parser":     "^1.20.3",
+    "express":         "^4.19.2",
+    "express-session": "^1.18.0",
+    "nunjucks":        "^3.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

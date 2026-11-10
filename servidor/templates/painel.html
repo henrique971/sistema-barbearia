@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block corpo %}
+<h1>Painel</h1>
+<p class="dica">Bem-vindo, {{ session.nome }}. Use o menu acima para navegar.</p>
+<div class="grade">
+  <a class="cartao" href="/clientes"><strong>{{ contagens.cliente }}</strong> clientes</a>
+  <a class="cartao" href="/barbeiros"><strong>{{ contagens.barbeiro }}</strong> barbeiros</a>
+  <a class="cartao" href="/servicos"><strong>{{ contagens.servico }}</strong> serviços</a>
+  <a class="cartao" href="/agendamentos"><strong>{{ contagens.agendamento }}</strong> agendamentos</a>
+</div>
+{% endblock %}
