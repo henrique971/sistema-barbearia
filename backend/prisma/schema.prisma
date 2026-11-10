@@ -88,3 +88,4 @@ model Agendamento {
   @@index([cliente_id])
   @@map("agendamentos")
 }
+

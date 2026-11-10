@@ -98,3 +98,4 @@ npm run dev
 ```
 
 A aplicação estará acessível na URL indicada pelo Vite (geralmente `http://localhost:5173`).
+

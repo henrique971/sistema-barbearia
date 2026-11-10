@@ -10,3 +10,4 @@ router.get("/perfil", authMiddleware, perfil)
 
 export default router
 
+

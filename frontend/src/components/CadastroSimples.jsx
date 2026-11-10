@@ -143,3 +143,4 @@ export default function CadastroSimples({ titulo, rota, campos }) {
     </section>
   );
 }
+

@@ -17,3 +17,4 @@ router.use("/agendamentos", authMiddleware, agendamentoRoutes)
 
 export default router
 
+

@@ -4,3 +4,4 @@ import { PORT } from "./config/env.js"
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`)
 })
+
