@@ -1,10 +1,3 @@
-/**
- * db.js — Gerenciamento de conexão com o banco SQLite.
- *
- * Usa o módulo nativo `node:sqlite` disponível a partir do Node.js v22.5.0,
- * sem nenhuma dependência externa de compilação.
- */
-
 const { DatabaseSync } = require('node:sqlite');
 const config = require('./config');
 

@@ -1,24 +1,12 @@
-/**
- * gerar_seed.js — Gera o banco de dados saep.db com tabelas e dados de teste.
- *
- * CPF e senha de barbeiro são criptografados (AES-256-GCM) e as senhas de
- * usuário são hashadas com bcryptjs — igualmente ao script Python original.
- *
- * Uso (na raiz do projeto): node scripts/gerar_seed.js
- */
-
 'use strict';
 
 const path   = require('path');
 const bcrypt = require('bcryptjs');
 const { DatabaseSync } = require('node:sqlite');
 
-const RAIZ    = path.join(__dirname, '..');
+const RAIZ       = path.join(__dirname, '..');
 const { cifrar } = require('../servidor/crypto');
-
-const DB_PATH = path.join(RAIZ, 'saep.db');
-
-// ---------------------------------------------------------------- dados
+const DB_PATH    = path.join(RAIZ, 'saep.db');
 
 const USUARIOS = [
   { id: 1, nome: 'Ana Souza',     login: 'ana',     senha: 'ana123'     },
@@ -49,8 +37,6 @@ const AGENDAMENTOS = [
   { id: 2, cliente_id: 2, barbeiro_id: 2, servico_id: 1, data: '2026-11-10', hora: '10:00', status: 'marcado' },
   { id: 3, cliente_id: 3, barbeiro_id: 3, servico_id: 2, data: '2026-11-11', hora: '14:30', status: 'marcado' },
 ];
-
-// ---------------------------------------------------------------- seed
 
 async function gerar() {
   const db = new DatabaseSync(DB_PATH);
@@ -104,52 +90,32 @@ async function gerar() {
     );
   `);
 
-  // usuários (senha com bcrypt hash)
-  const insUsuario = db.prepare(
-    'INSERT INTO usuario (id, nome, login, senha_hash) VALUES (?, ?, ?, ?)'
-  );
+  const insUsuario = db.prepare('INSERT INTO usuario (id, nome, login, senha_hash) VALUES (?, ?, ?, ?)');
   for (const u of USUARIOS) {
     insUsuario.run(u.id, u.nome, u.login, await bcrypt.hash(u.senha, 12));
   }
-  console.log('✔ usuários inseridos');
 
-  // barbeiros (CPF e senha criptografados)
-  const insBarb = db.prepare(
-    'INSERT INTO barbeiro (id, nome, telefone, cpf_criptografado, senha_criptografada) VALUES (?, ?, ?, ?, ?)'
-  );
+  const insBarb = db.prepare('INSERT INTO barbeiro (id, nome, telefone, cpf_criptografado, senha_criptografada) VALUES (?, ?, ?, ?, ?)');
   for (const b of BARBEIROS) {
     insBarb.run(b.id, b.nome, b.telefone, cifrar(b.cpf), cifrar(b.senha));
   }
-  console.log('✔ barbeiros inseridos');
 
-  // clientes (CPF criptografado)
-  const insCli = db.prepare(
-    'INSERT INTO cliente (id, nome, telefone, cpf_criptografado) VALUES (?, ?, ?, ?)'
-  );
+  const insCli = db.prepare('INSERT INTO cliente (id, nome, telefone, cpf_criptografado) VALUES (?, ?, ?, ?)');
   for (const c of CLIENTES) {
     insCli.run(c.id, c.nome, c.telefone, cifrar(c.cpf));
   }
-  console.log('✔ clientes inseridos');
 
-  // serviços
-  const insServ = db.prepare(
-    'INSERT INTO servico (id, nome, preco, duracao_min) VALUES (?, ?, ?, ?)'
-  );
+  const insServ = db.prepare('INSERT INTO servico (id, nome, preco, duracao_min) VALUES (?, ?, ?, ?)');
   for (const s of SERVICOS) insServ.run(s.id, s.nome, s.preco, s.duracao_min);
-  console.log('✔ serviços inseridos');
 
-  // agendamentos
-  const insAgend = db.prepare(
-    'INSERT INTO agendamento (id, cliente_id, barbeiro_id, servico_id, data, hora, status) VALUES (?, ?, ?, ?, ?, ?, ?)'
-  );
+  const insAgend = db.prepare('INSERT INTO agendamento (id, cliente_id, barbeiro_id, servico_id, data, hora, status) VALUES (?, ?, ?, ?, ?, ?, ?)');
   for (const a of AGENDAMENTOS) {
     insAgend.run(a.id, a.cliente_id, a.barbeiro_id, a.servico_id, a.data, a.hora, a.status);
   }
-  console.log('✔ agendamentos inseridos');
 
   db.close();
-  console.log(`\nBanco gerado em: ${DB_PATH}`);
-  console.log('Logins de teste: ana/ana123  carlos/carlos123  juliana/juliana123');
+  console.log('Banco gerado em: ' + DB_PATH);
+  console.log('Logins: ana/ana123  carlos/carlos123  juliana/juliana123');
 }
 
 gerar().catch(err => { console.error(err); process.exit(1); });
